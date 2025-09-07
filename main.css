@@ -7,22 +7,22 @@ body {
     font-family: Tahoma, Arial;
 }
 
-div.menu {
+.menu {
     width: 100%;
     background-color: #4d5791;
     height: 44px;
     padding: 0 40px;
 }
 
-div.menu ul,
-div.menu ul li {
+.menu ul,
+.menu ul li {
     margin: 0;
     padding: 0 ;
     list-style: none;
     display: inline-block;
 }
 
-div.menu ul li a {
+.menu ul li a {
     display: block;
     padding: 0 20px;
     line-height: 44px;
@@ -32,12 +32,12 @@ div.menu ul li a {
     margin: 0;
 }
 
-div.menu ul li a:hover  {
+.menu ul li a:hover  {
     background-color: white;
     color: #4d5791;
 }
 
-div.hero {
+.hero {
     height: 350px;
     background-color: #b4c6f0;
     background-image: url('/pb/bg.png');
@@ -47,19 +47,19 @@ div.hero {
     padding-top: 40px;
 }
 
-div.hero h1,
-div.hero h2 {
+.hero h1,
+.hero h2 {
     text-align: center;
     margin: 0;
 }
 
-div.hero h1 {
+.hero h1 {
     color: #fff;
     font-size: 4.2em;
     margin-bottom: 20px;
 }
 
-div.hero h2 {
+.hero h2 {
     color: #4d5791;
 }
 
@@ -70,7 +70,10 @@ div.hero h2 {
 
 .page-area {
     max-width: 768px;
-    display: inline-block;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
 }
 
 .bottom {
@@ -83,16 +86,16 @@ div.hero h2 {
     text-align: center;
 }
 
-.container div.text-box {
-    display: inline-block;
-    width: 100%;
-    max-width: 340px;
+.text-box {
     text-align: justify;
-    margin: 20px;
 }
 
 @media screen and (min-width: 768px) {
-    .container .div.text-box {
+    .page-area {
+        grid-template-columns: 1fr 1fr;
+        column-gap: 40px;
+    }
+    .text-box {
         margin: 10px;
     }
 }
