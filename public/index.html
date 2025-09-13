@@ -8,8 +8,8 @@
     <meta name="keywords" content="personal budget, budget management, financial goals, money tracking">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personal Budget</title>
-    <link rel="stylesheet" href="/pb/reset.css">
-    <link rel="stylesheet" href="/pb/main.css">
+    <link rel="stylesheet" href="/reset.css">
+    <link rel="stylesheet" href="/main.css">
     <!-- This is an SEO Change -->
     <meta name="robots" content="index, follow">
 </head>
@@ -23,8 +23,8 @@
         <ul>
             <!-- This is an A11y Change -->
             <li><a href="/" aria-label="Go to Homepage" aria-current="page">Homepage</a></li>
-            <li><a href="/pb/about.html" aria-label="Learn About the App">About</a></li>
-            <li><a href="/pb/login.html" aria-label="Log in to your account">Login</a></li>
+            <li><a href="/about.html" aria-label="Learn About the App">About</a></li>
+            <li><a href="/login.html" aria-label="Log in to your account">Login</a></li>
             <li><a href="https://google.com" target="_blank" rel="noopener noreferrer" aria-label="Go to Google in a new tab">Google</a></li>
         </ul>
     </nav>
@@ -98,9 +98,9 @@
             </section>
     
             <section class="text-box">
-                <h2>Free</h2>
+                <h2>Chart</h2>
                 <p>
-                    This app is free!!! And you are the only one holding your data!
+                    <canvas id="myChart" width="400" height="400"></canvas>
                 </p>
             </section>
 
@@ -115,6 +115,44 @@
             <p>&copy; All rights reserved by Fabio Nolasco</p>
         </div>
     </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.20.0/axios.min.js" integrity="sha512-quHCp3WbBNkwLfYUMd+KwBAgpVukJu5MncuQaWXgCrfgcxCJAq/fo+oqrRKOj+UKEmyMCG3tb8RB63W+EmrOBg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var dataSource = {
+            datasets: [
+                {
+                    data: [],
+                    backgroundColor: [
+                       '#ffcd56',
+                       '#ff6384',
+                       '#36a2eb',
+                       '#fd6b19', 
+                    ],
+                }
+            ],
+            labels: []
+        };
 
+        function createChart() {
+            var ctx = document.getElementById("myChart").getContext("2d");
+            var myPieChart = new Chart(ctx, {
+                type: 'pie',
+                data: dataSource
+            });
+        }
+
+        function getBudget(){
+            axios.get('/budget')
+            .then(function (res){
+                console.log(res);
+                for(var i=0; i< res.data.myBudget.length; i++){
+                    dataSource.datasets[0].data[i] = res.data.myBudget[i].budget;
+                    dataSource.labels[i] = res.data.myBudget[i].title;
+                }
+                createChart();
+            })
+        }
+        getBudget();
+    </script>
 </body>
 </html>
