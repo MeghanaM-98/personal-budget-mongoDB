@@ -103,10 +103,154 @@
                     <canvas id="myChart" width="400" height="400"></canvas>
                 </p>
             </section>
+            <section class="chart-section">
+    <h2>D3Donut Chart with Callout Labels</h2>
+            </section>
 
         </div>
 
     </main>
+     <!-- D3 Donut with Labels (based on dbuezas/9306799) -->
+  <section class="chart-section">
+    <div id="d3-donut" style="width:100%; max-width: 900px; height: 520px; margin:auto;"></div>
+  </section>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+  (function() {
+    const container = document.getElementById('d3-donut');
+    if (!container) return;
+
+    function drawDonut(items) {
+      // Clear previous render
+      container.innerHTML = '';
+
+      const width = container.clientWidth || 900;
+      const height = container.clientHeight || 520;
+      const radius = Math.min(width, height) / 2;
+
+      const svg = d3.select(container)
+        .append('svg')
+        .attr('width', width)
+        .attr('height', height)
+        .append('g')
+        .attr('transform', `translate(${width/2},${height/2})`);
+
+      svg.append('g').attr('class', 'slices');
+      svg.append('g').attr('class', 'labels');
+      svg.append('g').attr('class', 'lines');
+
+      const pie = d3.pie()
+        .sort(null)
+        .value(d => +d.budget);
+
+      const arc = d3.arc()
+        .outerRadius(radius * 0.8)
+        .innerRadius(radius * 0.5);
+
+      const outerArc = d3.arc()
+        .innerRadius(radius * 0.9)
+        .outerRadius(radius * 0.9);
+
+      const color = d3.scaleOrdinal()
+        .domain(items.map(d => d.title))
+        .range(d3.schemeCategory10.concat(d3.schemeSet3 || []));
+
+      const key = d => d.data.title;
+
+      // Slices
+      const slice = svg.select('.slices')
+        .selectAll('path.slice')
+        .data(pie(items), key);
+
+      slice.enter()
+        .append('path')
+        .attr('class','slice')
+        .attr('fill', d => color(d.data.title))
+        .each(function(d){ this._current = d; })
+        .transition()
+        .duration(750)
+        .attrTween('d', function(d){
+          const i = d3.interpolate(this._current, d);
+          this._current = i(0);
+          return t => arc(i(t));
+        });
+
+      // Text labels
+      const text = svg.select('.labels').selectAll('text')
+        .data(pie(items), key);
+
+      const midAngle = d => d.startAngle + (d.endAngle - d.startAngle)/2;
+
+      text.enter()
+        .append('text')
+        .attr('class','label')
+        .attr('dy','.35em')
+        .text(d => `${d.data.title} (${d.data.budget})`)
+        .each(function(d){ this._current = d; })
+        .transition().duration(750)
+        .attrTween('transform', function(d){
+          const i = d3.interpolate(this._current, d);
+          this._current = i(0);
+          return t => {
+            const d2 = i(t);
+            const pos = outerArc.centroid(d2);
+            pos[0] = radius * (midAngle(d2) < Math.PI ? 1 : -1);
+            return `translate(${pos})`;
+          };
+        })
+        .styleTween('text-anchor', function(d){
+          const i = d3.interpolate(this._current, d);
+          return t => {
+            const d2 = i(t);
+            return midAngle(d2) < Math.PI ? 'start' : 'end';
+          };
+        });
+
+      // Polylines
+      const polyline = svg.select('.lines').selectAll('polyline')
+        .data(pie(items), key);
+
+      polyline.enter()
+        .append('polyline')
+        .attr('class','polyline')
+        .each(function(d){ this._current = d; })
+        .transition().duration(750)
+        .attrTween('points', function(d){
+          const i = d3.interpolate(this._current, d);
+          this._current = i(0);
+          return t => {
+            const d2 = i(t);
+            const pos = outerArc.centroid(d2);
+            pos[0] = radius * (midAngle(d2) < Math.PI ? 1 : -1);
+            return [arc.centroid(d2), outerArc.centroid(d2), pos];
+          };
+        });
+
+      // Title
+      svg.append('text')
+        .attr('text-anchor','middle')
+        .attr('y', -radius * 0.65)
+        .attr('font-weight', 600);
+    }
+
+    function loadAndDraw(){
+      fetch('/budget')
+        .then(r => r.json())
+        .then(json => {
+          const items = (json && json.myBudget) ? json.myBudget : [];
+          drawDonut(items);
+        })
+        .catch(err => console.error('Failed to load /budget for donut:', err));
+    }
+
+    loadAndDraw();
+    window.addEventListener('resize', () => {
+      // Simple responsive re-draw
+      loadAndDraw();
+    });
+  })();
+  </script>
     
     <!-- This is an Semantic Change -->
     <!-- This is an A11y Change -->
