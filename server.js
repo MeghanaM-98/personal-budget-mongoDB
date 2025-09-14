@@ -5,7 +5,7 @@ const fs = require('fs/promises');
 const app = express();
 const port = 3000;
 
-
+// Serve your static files (put index.html and assets under ./public)
 app.use('/', express.static('public'));
 
 // Simple health route (unchanged)
