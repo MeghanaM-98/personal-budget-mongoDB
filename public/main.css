@@ -99,3 +99,17 @@ body {
         margin: 10px;
     }
 }
+
+/* simple styling for label lines */
+    #d3-donut svg .polyline {
+      opacity: 0.5;
+      stroke: #333;
+      stroke-width: 1.8px;
+      fill: none;
+    }
+    #d3-donut svg .slice {
+      stroke-width: 2px;
+    }
+    #d3-donut svg text.label {
+      font: 12px/1.2 sans-serif;
+    }
