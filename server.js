@@ -1,4 +1,7 @@
+//Budget API
+
 const express = require('express');
+const cors = require('cors');
 const path = require('path');
 const fs = require('fs/promises');
 
@@ -6,15 +9,11 @@ const app = express();
 const port = 3000;
 
 
-app.use('/', express.static('public'));
+app.use(cors());
 
-// Simple health route (unchanged)
-app.get('/hello', (req, res) => {
-  res.send('Hello World!');
-});
 
 // Load budget data from JSON file on each request
-app.get('/budget', async (req, res) => {
+app.get('http://localhost:3000/budget', async (req, res) => {
   try {
     const filePath = path.join(__dirname, 'budget.json');
     const raw = await fs.readFile(filePath, 'utf-8');
@@ -27,5 +26,5 @@ app.get('/budget', async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+  console.log(`API served at http://localhost:${port}`);
 });

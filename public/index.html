@@ -8,8 +8,8 @@
     <meta name="keywords" content="personal budget, budget management, financial goals, money tracking">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personal Budget</title>
-    <link rel="stylesheet" href="/pb/reset.css">
-    <link rel="stylesheet" href="/pb/main.css">
+    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="main.css">
     <!-- This is an SEO Change -->
     <meta name="robots" content="index, follow">
 </head>
@@ -23,8 +23,8 @@
         <ul>
             <!-- This is an A11y Change -->
             <li><a href="/" aria-label="Go to Homepage" aria-current="page">Homepage</a></li>
-            <li><a href="/pb/about.html" aria-label="Learn About the App">About</a></li>
-            <li><a href="/pb/login.html" aria-label="Log in to your account">Login</a></li>
+            <li><a href="about.html" aria-label="Learn About the App">About</a></li>
+            <li><a href="login.html" aria-label="Log in to your account">Login</a></li>
             <li><a href="https://google.com" target="_blank" rel="noopener noreferrer" aria-label="Go to Google in a new tab">Google</a></li>
         </ul>
     </nav>
@@ -235,7 +235,7 @@
     }
 
     function loadAndDraw(){
-      fetch('/budget')
+      fetch('http://localhost:3000/budget')
         .then(r => r.json())
         .then(json => {
           const items = (json && json.myBudget) ? json.myBudget : [];
@@ -286,7 +286,7 @@
         }
 
         function getBudget(){
-            axios.get('/budget')
+            axios.get('http://localhost:3000/budget')
             .then(function (res){
                 console.log(res);
                 for(var i=0; i< res.data.myBudget.length; i++){

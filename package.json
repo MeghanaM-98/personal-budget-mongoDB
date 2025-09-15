@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/MeghanaM-98/personal-budget#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^5.1.0"
   }
 }
